@@ -1,64 +1,107 @@
-border: 1px solid #ecf0f1;
-border-left: 5px**
-<!DOCTYPE5px;
-    border-radius: 5px;
-}
-
-.quote-item h3 {
-    margin html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
--top: 0;
-    border-bottom: none;
-    padding-bottom: 0;
-}    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-.quote-item p {
-    margin: 5px 0;
-}
-
-.quote-item strong {    <title>Admin: Manage Menu - ArtisanQuote</title>
-    <link rel="stylesheet" href="style
-    color: var(--primary-color);
-}
-
-/* --- Success/Confirmation Message --- */
-.success-.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Quote Requests</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>ArtisanQuote Adminmessage {
-    text-align: center;
-    padding: 40px 20px;
-    background-</h1>
+        <h1>Quote Requests Dashboard</h1>
         <nav>
-            <a href="index.html" class="active">Manage Menu</a>
-            <a href="admin-orders.html">View Quotes</a>
-            <a href="quote-form.htmlcolor: #e8f5e9;
-    border: 1px solid #a5d6a7;
-    border-radius: 8px;
-    color: #2e7d32;
-}
-
-.success-" target="_blank">Open Customer Form</a>
+            <a href="index.html" class="active">View Quotes</a>
+            <a href="admin-menu.html">Manage Menu</a>
+            <a href="new-quote.html" target="_blank">Open Customer Form</a>
         </nav>
-
+        
         <div class="disclaimer">
-            Note: This is the administrative area. The "Open Customer Form" link opens the form your clients would use.message h2 {
-    color: #1b5e20;
-    border-bottom: none;
-
+            This is the internal dashboard for viewing all submitted customer quotes.
         </div>
+        
+        <div id="quote-list-container">
+            <!-- Quotes will be dynamically inserted here by JavaScript -->
+        </div>
+    </div>
 
-        <!-- Form to Add a New Menu Item -->
-        <section>
-            <h2>Add New Material/}
+    <script>
+        // --- JavaScript for the Admin Dashboard ---
 
-.success-message a {
-    background-color: var(--primary-color);
-    color: varService</h2>
-            <form id="add-item-form">
-                <label for="item-name">Item Name ((--white);
-}
+        // This function will run as soon as the HTML part of the page is fully loaded.
+        window.onload = function() {
+            displayQuotes();
+        };
+
+        // This function gets the quote data from localStorage and displays it on the page.
+        function displayQuotes() {
+            const quoteListContainer = document.getElementById('quote-list-container');
+            
+            // Get the list of quotes from our "Magic Backpack" (localStorage).
+            const quotes = JSON.parse(localStorage.getItem('artisanQuotes')) || [];
+
+            // Clear any existing content to prevent duplicates when refreshing.
+            quoteListContainer.innerHTML = '';
+
+            // Check if there are any quotes to display.
+            if (quotes.length === 0) {
+                quoteListContainer.innerHTML = '<h2>No quote requests have been submitted yet.</h2>';
+                return; // Stop the function here.
+            }
+
+            // Create a heading for the list.
+            const listHeading = document.createElement('h2');
+            listHeading.textContent = 'Received Quotes';
+            quoteListContainer.appendChild(listHeading);
+
+            const quoteList = document.createElement('ul');
+            quoteListContainer.appendChild(quoteList);
+
+            // Loop through the quotes and display them (newest first).
+            // We use .slice().reverse() to create a reversed copy without changing the original array.
+            quotes.slice().reverse().forEach(quote => {
+                // Create a new list item element for each quote.
+                const quoteElement = document.createElement('li');
+                
+                // Fill the list item with the quote's information using HTML.
+                // This makes it easy to style and read.
+                quoteElement.innerHTML = `
+                    <div class="item-details">
+                        <h3>${quote.itemType} for ${quote.clientName}</h3>
+                        <p><strong>Status:</strong> ${quote.status}</p>
+                        <p><strong>Contact:</strong> ${quote.clientEmail} | ${quote.clientPhone}</p>
+                        <p><strong>Material:</strong> ${quote.materialType}</p>
+                        <p><strong>Dimensions:</strong> ${quote.dimensions}</p>
+                        <p><strong>Notes:</strong> ${quote.notes || "None"}</p>
+                        <p><strong>Uploaded File:</strong> ${quote.fileName}</p>
+                        <p class="order-timestamp">Submitted: ${quote.submittedAt}</p>
+                    </div>
+                    <button class="delete-btn" onclick="deleteQuote(${quote.id})">Delete Quote</button>
+                `;
+
+                // Add the newly created quote element to the list on the page.
+                quoteList.appendChild(quoteElement);
+            });
+        }
+
+        // Function to delete a quote, made available to the whole window so 'onclick' can find it.
+        window.deleteQuote = function(quoteId) {
+            // Ask for confirmation before deleting.
+            if (!confirm("Are you sure you want to permanently delete this quote request?")) {
+                return; // Stop if the user clicks "Cancel".
+            }
+
+            let quotes = JSON.parse(localStorage.getItem('artisanQuotes')) || [];
+            
+            // Find the quote with the matching ID and remove it from the list.
+            const updatedQuotes = quotes.filter(quote => quote.id !== quoteId);
+
+            // Save the new, filtered list back to localStorage.
+            localStorage.setItem('artisanQuotes', JSON.stringify(updatedQuotes));
+
+            // Refresh the display to show the quote has been removed.
+            displayQuotes();
+        }
+
+    </script>
+</body>
+</html>
