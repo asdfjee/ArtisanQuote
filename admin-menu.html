@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin: Manage Menu - ArtisanQuote</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Materials & Services</h1>
+        <nav>
+            <a href="index.html">View Quotes</a>
+            <a href="admin-menu.html" class="active">Manage Menu</a>
+            <a href="new-quote.html" target="_blank">Open Customer Form</a>
+        </nav>
+
+        <div class="disclaimer">
+            Items added here will appear in the "Preferred Material" dropdown on the customer quote form.
+        </div>
+
+        <!-- Form to Add a New Menu Item -->
+        <section>
+            <h2>Add New Menu Item</h2>
+            <form id="add-item-form">
+                <label for="item-name">Item Name (e.g., "Carrara Marble Slab", "Custom Oak Tabletop"):</label>
+                <input type="text" id="item-name" required>
+
+                <label for="item-price">Base Price ($ per sq/ft or unit):</label>
+                <input type="number" id="item-price" step="0.01" min="0" required>
+                
+                <input type="submit" value="Add Item to Menu">
+            </form>
+        </section>
+
+        <!-- Display of Current Menu Items -->
+        <section>
+            <h2>Current Menu Items</h2>
+            <ul id="menu-list">
+                <!-- Items will be dynamically loaded here by JavaScript -->
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // --- JAVASCRIPT LOGIC --- //
+        // This is the "brain" for the admin menu page.
+
+        // Get references to HTML elements we need to work with.
+        const addItemForm = document.getElementById('add-item-form');
+        const menuList = document.getElementById('menu-list');
+        const itemNameInput = document.getElementById('item-name');
+        const itemPriceInput = document.getElementById('item-price');
+
+        // --- Data Handling using localStorage (Our "Magic Backpack") ---
+        
+        // Function to get menu items from localStorage.
+        function getMenuItems() {
+            // Check if items exist, if not, return an empty list to avoid errors.
+            return JSON.parse(localStorage.getItem('artisanMenuItems')) || [];
+        }
+
+        // Function to save menu items to localStorage.
+        function saveMenuItems(items) {
+            localStorage.setItem('artisanMenuItems', JSON.stringify(items));
+        }
+
+        // --- Core Functions ---
+
+        // Function to display all menu items on the page.
+        function displayMenu() {
+            // Clear the current list to avoid duplicates when we re-display it.
+            menuList.innerHTML = '';
+            const items = getMenuItems();
+
+            if (items.length === 0) {
+                menuList.innerHTML = '<li>No items have been added to the menu yet.</li>';
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                
+                li.innerHTML = `
+                    <div class="item-details">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-price">$${parseFloat(item.price).toFixed(2)} per unit</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem(${index})">Delete</button>
+                `;
+                
+                menuList.appendChild(li);
+            });
+        }
+
+        // Function to delete an item.
+        // We need to define this function in the global 'window' scope so the 'onclick' attribute can find it.
+        window.deleteItem = function(index) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                let items = getMenuItems();
+                items.splice(index, 1); // Remove the item at the specified index.
+                saveMenuItems(items);
+                displayMenu(); // Refresh the list.
+            }
+        };
+
+        // --- Event Listeners ---
+
+        // Handle the form submission for adding a new item.
+        addItemForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop the form from reloading the page.
+
+            // Get current items, add the new one.
+            let items = getMenuItems();
+            items.push({
+                name: itemNameInput.value,
+                price: itemPriceInput.value
+            });
+            
+            // Save the updated list.
+            saveMenuItems(items);
+
+            // Reset the form fields for the next entry.
+            addItemForm.reset();
+
+            // Refresh the displayed menu.
+            displayMenu();
+        });
+
+        // --- Initial Page Load ---
+
+        // Display the menu when the page first loads.
+        document.addEventListener('DOMContentLoaded', displayMenu);
+
+    </script>
+</body>
+</html>
