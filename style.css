@@ -1,0 +1,237 @@
+/* --- Global Styles & Variables (Anthropologie-Inspired) --- */
+:root {
+    --primary-font: 'Georgia', 'Times New Roman', serif; /* A classic, elegant serif font */
+    --secondary-font: 'Helvetica Neue', 'Arial', sans-serif; /* A clean, modern sans-serif for UI elements */
+    --text-color: #3d3d3d; /* A soft, dark gray instead of harsh black */
+    --primary-color: #8B4513; /* A warm, saddle brown for accents */
+    --background-color: #fdfdfa; /* A very light, warm off-white */
+    --border-color: #e8e8e8; /* A subtle, light gray for borders */
+    --button-hover-color: #a0522d; /* A slightly richer brown for hover */
+    --disclaimer-bg: #fef9f2; /* A warm, creamy yellow for notes */
+    --disclaimer-border: #fce1c2;
+}
+
+body {
+    font-family: var(--primary-font);
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.7;
+}
+
+/* --- Main Container & Layout --- */
+.container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 30px 50px;
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* --- Typography --- */
+h1, h2, h3 {
+    font-weight: normal; /* A key part of the elegant look */
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 2.8em;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 25px;
+}
+
+h2 {
+    font-size: 1.8em;
+    margin-top: 40px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+/* --- Forms & Inputs --- */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-family: var(--secondary-font);
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #666;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+    padding: 15px;
+    font-size: 16px;
+    font-family: var(--primary-font);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #fafafa;
+    transition: all 0.2s ease-in-out;
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+    box-shadow: 0 0 5px rgba(139, 69, 19, 0.2);
+}
+
+/* --- Buttons --- */
+button, input[type="submit"] {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 15px 25px;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: var(--secondary-font);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Aligns button to the left */
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: var(--button-hover-color);
+}
+
+/* --- Navigation Links --- */
+nav {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #555;
+    margin: 0 15px;
+    font-family: var(--secondary-font);
+    font-weight: bold;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+nav a.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* --- Admin Quote & Menu List --- */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.item-name, .quote-item h3 {
+    font-size: 1.2em;
+    font-weight: normal;
+    color: #000;
+}
+
+.item-price, .order-details {
+    color: #666;
+    font-size: 1em;
+    margin-left: 15px;
+}
+
+.order-timestamp {
+    font-style: italic;
+    color: #888;
+    font-size: 0.85em;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.delete-btn {
+    background-color: #ddd;
+    color: #333;
+    padding: 8px 15px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    align-self: center; /* Override button default alignment */
+    margin-top: 0;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b; /* Red on hover for delete */
+    color: #ffffff;
+}
+
+/* --- Disclaimers & Success Messages --- */
+.disclaimer {
+    background-color: var(--disclaimer-bg);
+    border: 1px solid var(--disclaimer-border);
+    padding: 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+    text-align: center;
+    font-style: italic;
+}
+
+.success-message {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.success-message h2 {
+    font-size: 2.2em;
+    border-bottom: none;
+}
+
+.success-message a {
+    align-self: center;
+}
