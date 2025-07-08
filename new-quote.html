@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Quote - Artisan Furnishings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Request a Custom Quote</h1>
+        <p>Please provide the details for your project, and our specialists will get back to you with a precise quote.</p>
+        
+        <nav>
+            <a href="new-quote.html" class="active">New Quote</a>
+            <a href="index.html">Admin Dashboard</a>
+        </nav>
+        
+        <form id="quote-form">
+            <!-- Section 1: Project Details -->
+            <section>
+                <h2>Project Details</h2>
+                
+                <label for="item-type">What are we creating?</label>
+                <select id="item-type" required>
+                    <option value="">-- Please select an item --</option>
+                    <option value="Custom Mirror">Custom Mirror</option>
+                    <option value="Stone Countertop">Stone Countertop</option>
+                    <option value="Stone Tabletop">Stone Tabletop</option>
+                    <option value="Wood Furniture">Custom Wood Furniture</option>
+                    <option value="Other">Other (Please describe below)</option>
+                </select>
+                
+                <label for="material-select">Preferred Material</label>
+                <select id="material-select" required>
+                    <option value="">-- Please choose an available material --</option>
+                    <!-- Material options will be loaded here by JavaScript -->
+                </select>
+                
+                <label for="dimensions">Dimensions (e.g., 60" x 30" or detailed description)</label>
+                <input type="text" id="dimensions" required>
+                
+                <label for="notes">Additional Notes & Specifications</label>
+                <textarea id="notes" placeholder="Please include details on edge styles, cutouts (for sinks, faucets), finishes, or upload a file below."></textarea>
+                
+                <label for="file-upload">Upload Sketch or Blueprint (Optional)</label>
+                <!-- Note: A real file upload requires a server. We simulate this by just storing the file name for now. -->
+                <input type="file" id="file-upload">
+            </section>
+
+            <!-- Section 2: Contact Information -->
+            <section>
+                <h2>Your Information</h2>
+
+                <label for="client-name">Full Name or Company</label>
+                <input type="text" id="client-name" required>
+                
+                <label for="client-email">Email Address</label>
+                <input type="email" id="client-email" required>
+                
+                <label for="client-phone">Phone Number</label>
+                <input type="tel" id="client-phone">
+            </section>
+
+            <button type="submit">Submit Quote Request</button>
+        </form>
+    </div>
+    
+    <script>
+        // --- JavaScript for the Quote Form ---
+        // This script makes the form interactive and saves the data.
+        
+        // This function will run as soon as the HTML part of the page is fully loaded.
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Step 1: Populate the Materials Dropdown ---
+            const materialSelect = document.getElementById('material-select');
+            
+            // Get the list of menu items from our "Magic Backpack" (localStorage)
+            const menuItems = JSON.parse(localStorage.getItem('artisanMenuItems')) || [];
+
+            if (menuItems.length === 0) {
+                // If the admin hasn't added any materials yet, show a helpful message.
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "No materials available. Please contact us.";
+                option.disabled = true; // Make it so the user can't select this
+                materialSelect.appendChild(option);
+            } else {
+                // If there are materials, loop through each one and add it to the dropdown.
+                menuItems.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.name; // e.g., "Carrara Marble Slab"
+                    option.textContent = `${item.name} - ($${parseFloat(item.price).toFixed(2)} per unit)`;
+                    materialSelect.appendChild(option);
+                });
+            }
+
+            // --- Step 2: Handle the Form Submission ---
+            const quoteForm = document.getElementById('quote-form');
+
+            // Listen for when the user clicks the "Submit Quote Request" button.
+            quoteForm.addEventListener('submit', function(event) {
+                // This line prevents the browser from trying to refresh the page, which is the default behavior for forms.
+                event.preventDefault(); 
+
+                // Create a single, organized object to hold all the quote information.
+                const quoteData = {
+                    id: Date.now(), // Creates a unique ID for this quote using the current time in milliseconds.
+                    clientName: document.getElementById('client-name').value,
+                    clientEmail: document.getElementById('client-email').value,
+                    clientPhone: document.getElementById('client-phone').value,
+                    itemType: document.getElementById('item-type').value,
+                    materialType: document.getElementById('material-select').value,
+                    dimensions: document.getElementById('dimensions').value,
+                    notes: document.getElementById('notes').value,
+                    fileName: document.getElementById('file-upload').files[0]?.name || "No file uploaded", // Gets the file name if one was attached.
+                    status: "Submitted", // Sets the initial status for the admin to see.
+                    submittedAt: new Date().toLocaleString() // Adds a readable timestamp.
+                };
+
+                // Get the existing list of quotes from the "Magic Backpack".
+                // If no list exists, create an empty one: [].
+                let quotes = JSON.parse(localStorage.getItem('artisanQuotes')) || [];
+
+                // Add our new quote data to the list.
+                quotes.push(quoteData);
+
+                // Save the newly updated list back into the "Magic Backpack".
+                // We use JSON.stringify to convert our list object back into a string, which is how localStorage stores data.
+                localStorage.setItem('artisanQuotes', JSON.stringify(quotes));
+
+                // Send the user to the success page so they know everything worked!
+                window.location.href = 'quote-success.html';
+            });
+        });
+    </script>
+
+</body>
+</html>
+              
